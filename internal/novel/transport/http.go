@@ -8,14 +8,14 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 
 	"github.com/alfuckk/fumin/internal/novel/endpoints"
-	kitlog "github.com/go-kit/log"
+	"github.com/alfuckk/fumin/pkg/logfx"
 	"github.com/gorilla/mux"
 	"go.uber.org/fx"
 )
 
 type handlerParams struct {
 	fx.In
-	Log      kitlog.Logger
+	Log      *logfx.Logger
 	Endpoint endpoints.Endpoints
 }
 

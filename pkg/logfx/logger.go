@@ -1,27 +1,52 @@
 package logfx
 
 import (
-	"os"
-
-	"github.com/go-kit/log"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
-var logger log.Logger
-
-func init() {
-	logger = log.NewLogfmtLogger(os.Stderr)
-	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
-	logger = log.With(logger, "caller", log.DefaultCaller)
+type Logger struct {
+	*zap.SugaredLogger
 }
 
-func Info(keyvals ...interface{}) {
-	logger.Log(append([]interface{}{"level", "info"}, keyvals...)...)
+func (log Logger) Info(keyvals ...interface{}) {
+	log.Infow("Info", append([]interface{}{"level", "info"}, keyvals...)...)
 }
 
-func Error(keyvals ...interface{}) {
-	logger.Log(append([]interface{}{"level", "error"}, keyvals...)...)
+// Error 记录错误级别的日志
+func (log Logger) Error(keyvals ...interface{}) {
+	log.Errorw("Error", append([]interface{}{"level", "error"}, keyvals...)...)
 }
 
-func New() log.Logger {
-	return logger
+func New() *Logger {
+	config := zap.NewProductionConfig()
+
+	// 配置日志的时间格式
+	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	config.EncoderConfig.TimeKey = "timestamp"
+
+	// 构建日志对象
+	logger, err := config.Build(zap.AddCallerSkip(1))
+	if err != nil {
+		panic(err)
+	}
+
+	return &Logger{logger.Sugar()}
+}
+
+// NewDevelopmentLogger 创建一个用于开发环境的日志实例
+func NewDevelopmentLogger() *Logger {
+	config := zap.NewDevelopmentConfig()
+
+	// 配置日志的时间格式
+	config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	config.EncoderConfig.TimeKey = "timestamp"
+
+	// 构建日志对象
+	logger, err := config.Build(zap.AddCallerSkip(1))
+	if err != nil {
+		panic(err)
+	}
+
+	return &Logger{logger.Sugar()}
 }
