@@ -3,8 +3,6 @@ package endpoints
 import (
 	"context"
 
-	"github.com/go-kit/log"
-
 	"github.com/alfuckk/fumin/internal/novel/service"
 	"github.com/go-kit/kit/endpoint"
 	"go.uber.org/fx"
@@ -15,8 +13,6 @@ type Endpoints struct {
 }
 type EndpointParams struct {
 	fx.In
-	// Config  *viper.Viper
-	Logger  log.Logger
 	Service service.Service
 }
 

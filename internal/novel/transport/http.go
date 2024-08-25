@@ -5,21 +5,36 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/alfuckk/fumin/internal/novel/endpoints"
 	httptransport "github.com/go-kit/kit/transport/http"
+
+	"github.com/alfuckk/fumin/internal/novel/endpoints"
+	kitlog "github.com/go-kit/log"
 	"github.com/gorilla/mux"
+	"go.uber.org/fx"
 )
 
-func NewHTTPHandler(endpoints endpoints.Endpoints) http.Handler {
+type handlerParams struct {
+	fx.In
+	Log      kitlog.Logger
+	Endpoint endpoints.Endpoints
+}
+
+func NewHTTPHandler(p handlerParams) http.Handler {
 	r := mux.NewRouter()
+	r.Use(LoggingMiddleware(p.Log))
 
 	r.Path("/hello").Handler(httptransport.NewServer(
-		endpoints.HelloEndpoint,
+		p.Endpoint.HelloEndpoint,
 		decodeHelloRequest,
 		encodeResponse,
 	))
 
 	return r
+}
+
+type responseWriter struct {
+	http.ResponseWriter
+	statusCode int
 }
 
 func decodeHelloRequest(_ context.Context, r *http.Request) (interface{}, error) {
