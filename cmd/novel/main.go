@@ -4,9 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/alfuckk/fumin/internal/novel"
 	"github.com/alfuckk/fumin/pkg/logfx"
@@ -17,14 +14,14 @@ import (
 
 func main() {
 	fx.New(
-		novel.Module,
 		fx.Invoke(startServer),
+		novel.Module,
 	).Run()
 }
 
 func startServer(lc fx.Lifecycle, handler http.Handler, logfx *logfx.Logger, cfg *viper.Viper) {
 	port := fmt.Sprintf(":%d", cfg.GetInt("http.port"))
-	server := &http.Server{
+	srv := &http.Server{
 		Addr:    port,
 		Handler: handler,
 	}
@@ -32,10 +29,9 @@ func startServer(lc fx.Lifecycle, handler http.Handler, logfx *logfx.Logger, cfg
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			logfx.Info("msg", fmt.Sprintf("Starting server on %s", port))
-
 			var g group.Group
 			g.Add(func() error {
-				return http.ListenAndServe(port, handler)
+				return srv.ListenAndServe()
 			}, func(error) {
 				logfx.Info("msg", "Stopping server")
 			})
@@ -50,13 +46,7 @@ func startServer(lc fx.Lifecycle, handler http.Handler, logfx *logfx.Logger, cfg
 		},
 		OnStop: func(ctx context.Context) error {
 			logfx.Info("msg", "Stopping server")
-			return server.Shutdown(ctx)
+			return srv.Shutdown(ctx)
 		},
 	})
-
-	// Handle graceful shutdown
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-	logfx.Info("msg", "Shutting down server...")
 }
