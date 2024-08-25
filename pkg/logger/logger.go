@@ -13,5 +13,7 @@ type Params struct {
 
 func New(p Params) log.Logger {
 	logger := log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
-	return log.With(logger, "ts", log.DefaultTimestampUTC)
+	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
+	logger = log.With(logger, "caller", log.DefaultCaller)
+	return logger
 }
