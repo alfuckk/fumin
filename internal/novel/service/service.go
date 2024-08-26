@@ -32,8 +32,8 @@ func New(p ServiceParams) Service {
 
 func (s *service) Hello(ctx context.Context) (string, error) {
 	data := fetchNovel()
-	categories := fetchNovelCategory(data)
-	s.log.Info("status", categories)
+	// categories := fetchNovelCategory(data)
+	s.log.Info("status", data)
 	return "Hello, World!", nil
 }
 
