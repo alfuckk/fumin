@@ -1,4 +1,4 @@
-package config
+package configfx
 
 import (
 	"fmt"
@@ -12,10 +12,13 @@ type Params struct {
 	AppName string
 }
 
-func New(p Params) *viper.Viper {
-	envConf := fmt.Sprintf("config/%s/config.yaml", p.AppName)
+type Config struct {
+	*viper.Viper
+}
 
-	return getConfig(envConf)
+func New(p Params) *Config {
+	envConf := fmt.Sprintf("config/%s/config.yaml", p.AppName)
+	return &Config{getConfig(envConf)}
 }
 
 func getConfig(path string) *viper.Viper {

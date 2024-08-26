@@ -3,7 +3,8 @@ package service
 import (
 	"context"
 
-	"github.com/spf13/viper"
+	"github.com/alfuckk/fumin/pkg/configfx"
+	"github.com/alfuckk/fumin/pkg/logfx"
 	"go.uber.org/fx"
 )
 
@@ -13,20 +14,26 @@ type Service interface {
 }
 
 type service struct {
-	cfg *viper.Viper
+	cfg *configfx.Config
+	log *logfx.Logger
 }
 type ServiceParams struct {
 	fx.In
-	Config *viper.Viper
+	Config *configfx.Config
+	Log    *logfx.Logger
 }
 
 func New(p ServiceParams) Service {
 	return &service{
 		cfg: p.Config,
+		log: p.Log,
 	}
 }
 
 func (s *service) Hello(ctx context.Context) (string, error) {
+	data := fetchNovel()
+	categories := fetchNovelCategory(data)
+	s.log.Info("status", categories)
 	return "Hello, World!", nil
 }
 

@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/alfuckk/fumin/internal/novel"
+	"github.com/alfuckk/fumin/pkg/configfx"
 	"github.com/alfuckk/fumin/pkg/logfx"
 	"github.com/oklog/oklog/pkg/group"
-	"github.com/spf13/viper"
 	"go.uber.org/fx"
 )
 
@@ -19,7 +19,7 @@ func main() {
 	).Run()
 }
 
-func startServer(lc fx.Lifecycle, handler http.Handler, logfx *logfx.Logger, cfg *viper.Viper) {
+func startServer(lc fx.Lifecycle, handler http.Handler, logfx *logfx.Logger, cfg *configfx.Config) {
 	port := fmt.Sprintf(":%d", cfg.GetInt("http.port"))
 	srv := &http.Server{
 		Addr:    port,
