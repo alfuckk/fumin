@@ -3,6 +3,7 @@ module github.com/alfuckk/fumin
 go 1.23
 
 require (
+	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-kit/kit v0.13.0
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/gorilla/mux v1.8.1

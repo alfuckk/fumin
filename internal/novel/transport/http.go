@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	httptransport "github.com/go-kit/kit/transport/http"
 
 	"github.com/alfuckk/fumin/internal/novel/endpoints"
 	"github.com/alfuckk/fumin/pkg/logfx"
-	"github.com/gorilla/mux"
 	"go.uber.org/fx"
 )
 
@@ -20,38 +20,45 @@ type handlerParams struct {
 }
 
 func NewHTTPHandler(p handlerParams) http.Handler {
-	r := mux.NewRouter()
+	r := chi.NewRouter()
 	r.Use(LoggingMiddleware(p.Log))
 	//
 	r.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]bool{"ok": true})
 	})
-	// 搜书
-	r.Path("/api/novel/search").Handler(httptransport.NewServer(
+
+	searchNovel := httptransport.NewServer(
 		p.Endpoint.NovelListEndpoint,
 		decodeNovelListRequest,
 		encodeResponse,
-	))
+	)
+	r.Method(http.MethodGet, "/api/novel/search", searchNovel)
+	// 搜书
+
+	categoryNovel := httptransport.NewServer(
+		p.Endpoint.HelloEndpoint,
+		decodeHelloRequest,
+		encodeResponse,
+	)
+	r.Method(http.MethodGet, "/api/novel/category", categoryNovel)
 	// 获取书籍分类
-	r.Path("/api/novel/category").Handler(httptransport.NewServer(
+
+	detailNovel := httptransport.NewServer(
 		p.Endpoint.HelloEndpoint,
 		decodeHelloRequest,
 		encodeResponse,
-	))
+	)
 
+	r.Method(http.MethodGet, "/api/chapter/detail", detailNovel)
 	// 获取书籍详情
-	r.Path("/api/chapter/detail").Handler(httptransport.NewServer(
-		p.Endpoint.HelloEndpoint,
-		decodeHelloRequest,
-		encodeResponse,
-	))
 
-	// 书籍详情
-	r.Path("/api/chapter/list").Handler(httptransport.NewServer(
+	ListChapter := httptransport.NewServer(
 		p.Endpoint.HelloEndpoint,
 		decodeHelloRequest,
 		encodeResponse,
-	))
+	)
+	r.Method(http.MethodGet, "/api/chapter/list", ListChapter)
+	// 书籍详情
 
 	return r
 }
