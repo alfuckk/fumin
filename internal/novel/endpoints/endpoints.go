@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/alfuckk/fumin/internal/novel/service"
 	"github.com/go-kit/kit/endpoint"
 	"go.uber.org/fx"
+
+	"github.com/alfuckk/fumin/internal/novel/service"
 )
 
 type Endpoints struct {

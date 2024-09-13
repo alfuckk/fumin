@@ -18,7 +18,6 @@ func fetchNovel() *[]novel.Novel {
 	decoder := json.NewDecoder(file)
 	var data []novel.Novel
 	err = decoder.Decode(&data)
-
 	if err != nil {
 		fmt.Println("Error:", err)
 		return nil

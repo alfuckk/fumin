@@ -7,10 +7,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	httptransport "github.com/go-kit/kit/transport/http"
+	"go.uber.org/fx"
 
 	"github.com/alfuckk/fumin/internal/novel/endpoints"
 	"github.com/alfuckk/fumin/pkg/logfx"
-	"go.uber.org/fx"
 )
 
 type handlerParams struct {
@@ -34,7 +34,6 @@ func NewHTTPHandler(p handlerParams) http.Handler {
 	)
 	r.Method(http.MethodGet, "/api/novel/search", searchNovel)
 	// 搜书
-
 	categoryNovel := httptransport.NewServer(
 		p.Endpoint.HelloEndpoint,
 		decodeHelloRequest,
@@ -42,16 +41,13 @@ func NewHTTPHandler(p handlerParams) http.Handler {
 	)
 	r.Method(http.MethodGet, "/api/novel/category", categoryNovel)
 	// 获取书籍分类
-
 	detailNovel := httptransport.NewServer(
 		p.Endpoint.HelloEndpoint,
 		decodeHelloRequest,
 		encodeResponse,
 	)
-
 	r.Method(http.MethodGet, "/api/chapter/detail", detailNovel)
 	// 获取书籍详情
-
 	ListChapter := httptransport.NewServer(
 		p.Endpoint.HelloEndpoint,
 		decodeHelloRequest,

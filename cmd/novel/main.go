@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/oklog/oklog/pkg/group"
+	"go.uber.org/fx"
+
 	"github.com/alfuckk/fumin/internal/novel"
 	"github.com/alfuckk/fumin/pkg/configfx"
 	"github.com/alfuckk/fumin/pkg/logfx"
-	"github.com/oklog/oklog/pkg/group"
-	"go.uber.org/fx"
 )
 
 func main() {

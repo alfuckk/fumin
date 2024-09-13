@@ -3,9 +3,10 @@ package service
 import (
 	"context"
 
+	"go.uber.org/fx"
+
 	"github.com/alfuckk/fumin/pkg/configfx"
 	"github.com/alfuckk/fumin/pkg/logfx"
-	"go.uber.org/fx"
 )
 
 type Service interface {
