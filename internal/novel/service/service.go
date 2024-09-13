@@ -6,7 +6,9 @@ import (
 	"go.uber.org/fx"
 
 	"github.com/alfuckk/fumin/pkg/configfx"
+	"github.com/alfuckk/fumin/pkg/dbfx"
 	"github.com/alfuckk/fumin/pkg/logfx"
+	"github.com/alfuckk/fumin/pkg/redisfx"
 )
 
 type Service interface {
@@ -15,19 +17,26 @@ type Service interface {
 }
 
 type service struct {
-	cfg *configfx.Config
-	log *logfx.Logger
+	cfg   *configfx.Config
+	log   *logfx.Logger
+	db    *dbfx.Database
+	redis *redisfx.Redis
 }
+
 type ServiceParams struct {
 	fx.In
 	Config *configfx.Config
 	Log    *logfx.Logger
+	DB     *dbfx.Database
+	Redis  *redisfx.Redis
 }
 
 func New(p ServiceParams) Service {
 	return &service{
-		cfg: p.Config,
-		log: p.Log,
+		cfg:   p.Config,
+		log:   p.Log,
+		db:    p.DB,
+		redis: p.Redis,
 	}
 }
 
