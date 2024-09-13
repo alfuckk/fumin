@@ -1,6 +1,18 @@
 package endpoints
 
+import (
+	"go.uber.org/fx"
+
+	"github.com/alfuckk/fumin/internal/user/service"
+)
+
 type Endpoints struct{}
 
-func NewEndpoint() {
+type EndpointParams struct {
+	fx.In
+	service service.Service
+}
+
+func New(ep EndpointParams) Endpoints {
+	return Endpoints{}
 }

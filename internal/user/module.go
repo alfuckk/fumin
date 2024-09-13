@@ -3,9 +3,9 @@ package user
 import (
 	"go.uber.org/fx"
 
-	"github.com/alfuckk/fumin/internal/novel/endpoints"
-	"github.com/alfuckk/fumin/internal/novel/service"
 	"github.com/alfuckk/fumin/internal/novel/transport"
+	"github.com/alfuckk/fumin/internal/user/endpoints"
+	"github.com/alfuckk/fumin/internal/user/service"
 	"github.com/alfuckk/fumin/pkg/configfx"
 	"github.com/alfuckk/fumin/pkg/dbfx"
 	"github.com/alfuckk/fumin/pkg/logfx"
